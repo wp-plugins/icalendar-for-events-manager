@@ -2,9 +2,9 @@
 /*
 Plugin Name: iCal for Events Manager
 Plugin URI: http://benjaminfleischer.com/code/ical-for-events-manager
-Description: Creates an iCal feed for Events Manager  at http://your-web-address/?ical. Based on Gary King's iCal Posts (http://www.kinggary.com/archives/build-an-ical-feed-from-your-wordpress-posts-plugin) and modifications by Jerome (http://capacity.electronest.com/ical-for-ec-event-calendar/).
-Version: 1.0
-Author: Adapted by Benjamin Fleischer from iCal for Events Calendar by Mark Inderhees
+Description: Creates an iCal feed for Events Manager at http://your-web-address/?ical. 
+Version: 1.0.2
+Author: benjo4u
 Author URI: http://benjaminfleischer.com/code/ical-for-events-manager
 */
 
@@ -18,7 +18,7 @@ function iCalFeed()
     }
 
     $queryEvents = "SELECT event_id AS id, event_name AS eventTitle, event_notes AS eventDescription, ";
-	$queryEvent .= "location_name AS eventLocation, ";
+    $queryEvent .= "location_name AS eventLocation, ";
     $queryEvents .= "event_start_date AS eventStartDate, event_start_time AS eventStartTime,  ";
     $queryEvents .= "event_end_date AS eventEndDate, event_end_time AS eventEndTime ";
     $queryEvents .= "FROM ".$wpdb->prefix."dbem_events e, ".$wpdb->prefix."dbem_locations l ";
@@ -41,10 +41,10 @@ $tzoffset_daylight = "-0500";
     {
         $convertDateStart = strtotime($post->eventStartDate);
         $convertDateEnd = strtotime($post->eventEndDate);
-	if ($convertDateEnd < $convertDateStart ) {
-	 $convertDateEnd = $convertDateStart;
-	}
-	
+    if ($convertDateEnd < $convertDateStart ) {
+     $convertDateEnd = $convertDateStart;
+    }
+    
         if (NULL != $post->eventStartTime)
         {
             $convertHoursStart = explode(":", $post->eventStartTime);
@@ -148,7 +148,7 @@ $tzoffset_daylight = "-0500";
 
     if (defined('DEBUG'))
     {
-        #echo "\n" . $queryEvents . "\n";	
+        #echo "\n" . $queryEvents . "\n";    
         #echo $eventStart . "\n";
     }
 
