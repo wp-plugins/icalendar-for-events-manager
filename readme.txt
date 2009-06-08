@@ -1,16 +1,19 @@
-=== iCal for Events Calendar ===
-Contributors: YukataNinja, adapted by Benjamin Fleischer
+=== iCal for Events Manager ===
+Plugin Name: iCalendar feed for Events Manager
+Author URI: http://benjaminfleischer.com/code/ical-for-events-manager/
+Contributors: Benjamin Fleischer
 Donate link: 
-Tags: ical, events calendar, ec, ical feed, feed, icalendar, calendar, events, event, subscribe
+Tags: ical, events manager, ical feed, feed, icalendar, calendar, events, event, subscribe
 Requires at least: 2.6
 Tested up to: 2.7.1
+Version: 1.0
 Stable tag: 1.0
 
 Add an iCal feed to your site for the Events Manager plugin
 
 == Description ==
 
-Creates an iCal feed for [Events Manager](http://davidebenini.it/wordpress-plugins/events-manager/).
+Creates an iCal feed for [Events Manager](http://davidebenini.it/wordpress-plugins/events-manager/) based on plugin by YukataNinja (http://wordpress.org/extend/plugins/ical-for-events-calendar/).
 
 Based on [Gary King's iCal Posts](http://www.kinggary.com/archives/build-an-ical-feed-from-your-wordpress-posts-plugin) and modifications by [Jerome](http://capacity.electronest.com/ical-for-ec-event-calendar).
 
