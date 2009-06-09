@@ -2,7 +2,7 @@
 /*
 Plugin Name: iCal for Events Manager
 Description: Creates an iCal feed for Events Manager at http://your-web-address/?ical. 
-Version: 1.0.2
+Version: 1.0.3
 Author: benjo4u
 Author URI: http://benjaminfleischer.com/code/ical-for-events-manager
 */
