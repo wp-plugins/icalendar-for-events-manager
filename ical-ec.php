@@ -1,7 +1,6 @@
 <?php
 /*
 Plugin Name: iCal for Events Manager
-Plugin URI: http://benjaminfleischer.com/code/ical-for-events-manager
 Description: Creates an iCal feed for Events Manager at http://your-web-address/?ical. 
 Version: 1.0.2
 Author: benjo4u
@@ -16,7 +15,14 @@ function iCalFeed()
     {
         define("DEBUG", true);
     }
+$getstring = $_GET['ical'];
 
+ if($getstring == 'ics') {
+        if(file_exists('icalendar.ics')) {
+        header("Content-Type: text/Calendar");
+        header("Content-Disposition: inline; filename=icalendar.ics");
+        } else { echo 'no icalendar.ics file found'; }
+}
     $queryEvents = "SELECT event_id AS id, event_name AS eventTitle, event_notes AS eventDescription, ";
     $queryEvent .= "location_name AS eventLocation, ";
     $queryEvents .= "event_start_date AS eventStartDate, event_start_time AS eventStartTime,  ";
@@ -27,12 +33,20 @@ function iCalFeed()
 
     $posts = $wpdb->get_results($queryEvents);
 #settings
-$tzlocation = "America/Chicago";
-$tzoffset_standard = "-0600";
-$tzname = "CST";
-$tzname_daylight="CDT";
+if(isset($_GET['tzlocation'])) { $tzlocation = $_GET['tzlocation']; }
+else { $tzlocation = "America/Chicago"; }
 
-$tzoffset_daylight = "-0500";
+if(isset($_GET['tzoffset_standard'])) { $tzoffset_standard = $_GET['tzoffset_standard'];}
+else { $tzoffset_standard = "-0600"; }
+
+if(isset($_GET['tzname'])) { $tzname = $_GET['tzname']; }
+else { $tzname = "CST"; }
+
+if(isset($_GET['tzname_daylight'])) { $tzname_daylight = $_GET['tzname_daylight']; }
+else { $tzname_daylight="CDT"; }
+
+if(isset($_GET['tzoffset_daylight'])) { $tzoffset_daylight = $_GET['tzoffset_daylight']; }
+else { $tzoffset_daylight = "-0500"; }
 
 
     $events = "";
@@ -82,14 +96,14 @@ $tzoffset_daylight = "-0500";
             date("Y", $convertDateEnd)                              //year
 
         );
-
+$printableline = '=0D=0A=';
         $eventStart = date("Ymd\THis", $convertedStart) . "Z";
         $eventEnd = date("Ymd\THis", $convertedEnd) . "Z";
         $summary = $post->eventTitle;
         $description = $post->eventDescription;
-        $description = str_replace(",", "\,", $description);
-        $description = str_replace("\\", "\\\\", $description);
-        $description = str_replace("\n", $space, strip_tags($description));
+       # $description = str_replace(",", "\,", $description);
+       # $description = str_replace("\\", "\\\\", $description);
+        $description = str_replace("\n", $printableline, strip_tags($description));
        # $description = str_replace("\r", $space, strip_tags($description));
        # $description = str_replace("\t", $space, strip_tags($description));
 
@@ -99,7 +113,7 @@ $tzoffset_daylight = "-0500";
         $events .= "DTEND;TZID=".$tzlocation.":" . $eventEnd . "\n";
         $events .= "UID:" . $uid . "\n";
         $events .= "SUMMARY:" . $summary . "\n";
-        $events .= "DESCRIPTION:" .  preg_replace("/[\n\t\r]/", " ", $description) . "\n";
+        $events .= "DESCRIPTION;ENCODING=QUOTED-PRINTABLE:" .  preg_replace("/[\n\t\r]/", $printableline, $description) . "\n";
         $events .= "END:VEVENT\n";
     }
 
@@ -144,9 +158,41 @@ $tzoffset_daylight = "-0500";
     $content .= $events;
     $content .= "END:VCALENDAR";
 
-    echo $content;
+if($getstring == 'cron' || $getstring == 'rss') {
+$myFile = "icalendar.ics";
+$fh = fopen($myFile, 'w') or die("can't open file");
+fwrite($fh, $content);
+fclose($fh);
+if ($getstring == 'cron') {
+echo "icalendar.ics created";
+} else {
+$rsscron = '<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
 
-    if (defined('DEBUG'))
+<channel>
+<title>'.$blogName.' cronless icalendar update</title>
+<description>iCalendar for Events Manager Cronless Update</description>
+<link>'.$blogURL.'</link>
+<lastBuildDate>Mon, 28 Aug 2006 11:12:55 -0400 </lastBuildDate>
+<pubDate>Tue, 29 Aug 2006 09:00:00 -0400</pubDate>
+<item>
+<title>You updated your icalendar feed with rss!</title>
+<description>icalendar file updated</description>
+<link>'.$blogURL.'/?ical</link>
+<guid isPermaLink="false"> 1102345</guid>
+<pubDate>Tue, 29 Aug 2006 09:00:00 -0400</pubDate>
+</item>
+
+</channel>
+</rss>';
+echo $rsscron;
+}
+exit;
+} else {
+    echo $content;
+}
+    if 
+(defined('DEBUG'))
     {
         #echo "\n" . $queryEvents . "\n";    
         #echo $eventStart . "\n";
