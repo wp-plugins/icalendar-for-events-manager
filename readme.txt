@@ -2,7 +2,7 @@
 Plugin Name: iCalendar feed for Events Manager
 Author URI: http://benjaminfleischer.com/code/ical-for-events-manager/
 Contributors: benjo4u
-Donate link: 
+Donate link: http://benjaminfleischer.com/code/donate
 Tags: ical, events manager, ical feed, feed, icalendar, calendar, events, event, subscribe
 Requires at least: 2.6
 Tested up to: 2.7.1
