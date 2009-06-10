@@ -6,8 +6,8 @@ Donate link: http://benjaminfleischer.com/code/donate
 Tags: ical, events manager, ical feed, feed, icalendar, calendar, events, event, subscribe
 Requires at least: 2.6
 Tested up to: 2.7.1
-Version: 1.0.3
-Stable tag: 1.0.3
+Version: 1.0.4
+Stable tag: 1.0.4
 
 Add an iCal feed to your site for the Events Manager plugin
 
@@ -18,16 +18,22 @@ Creates an iCal feed for [Events Manager](http://davidebenini.it/wordpress-plugi
 Based on [Gary King's iCal Posts](http://www.kinggary.com/archives/build-an-ical-feed-from-your-wordpress-posts-plugin) and modifications by [Jerome](http://capacity.electronest.com/ical-for-ec-event-calendar).
 
 Currently, the timezone information is hardcoded as Chicago in the ical-ec.php file.  The next version will allow editing this from the admin panel
+1.0.4
+To force the use of the Wordpress GMT offset include the get variable forceoffset in your url. This makes it work in Google Calendar for me
+forceoffset, uses the gmt_offset in Wordpress
+Example: http://your-domain/?ical=ics&forceoffset
+
+Also fixed the line breaks
 
 1.0.3
 Changed description output to enconded quotable to preserve line breaks
 
 Added these configuration get parameters for time zones:
 tzlocation, e.g. America/Chicago
-tzoffset_standard, e.g. -0600
+`tzoffset_standard`, e.g. -0600
 tzname, e.g. CST
-tzname_daylight, e.g. CDT
-tzoffset_daylight, e.g. -0500
+`tzname_daylight`, e.g. CDT
+`tzoffset_daylight`, e.g. -0500
 I haven't robustly tested this. I think you can find these values [here](http://www.w3.org/2002/12/cal/tzd/)
 
 
