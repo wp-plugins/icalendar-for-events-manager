@@ -2,7 +2,7 @@
 /*
 Plugin Name: iCal for Events Manager
 Description: Creates an iCal feed for Events Manager at http://your-web-address/?ical. 
-Version: 1.0.4
+Version: 1.0.4b
 Author: benjo4u
 Author URI: http://benjaminfleischer.com/code/ical-for-events-manager
 */
@@ -16,7 +16,11 @@ function iCalFeed()
         define("DEBUG", true);
     }
 $getstring = $_GET['ical'];
-
+if(isset($_GET['forceoffset'])) {
+$forceoffset = get_option("gmt_offset");
+} else {
+$forceoffset = "";
+}
  if($getstring == 'ics') {
         if(file_exists('icalendar.ics')) {
         header("Content-Type: text/Calendar");
@@ -78,7 +82,7 @@ else { $tzoffset_daylight = "-0500"; }
         }
 
         $convertedStart = mktime(
-            $convertHoursStart[0],   //hours
+            $convertHoursStart[0] - $forceoffset,   //hours
             $convertHoursStart[1],                              //minutes
             $convertHoursStart[2],                              //seconds
             date("m" ,$convertDateStart),                               //month
@@ -87,8 +91,8 @@ else { $tzoffset_daylight = "-0500"; }
         );
 
         $convertedEnd = mktime(
- #           $convertHoursEnd[0] - get_option("gmt_offset"),     //hours
-            $convertHoursEnd[0],     //hours
+           $convertHoursEnd[0] - $forceoffset,     //hours
+#            $convertHoursEnd[0],     //hours
             $convertHoursEnd[1],                                //minutes
             $convertHoursEnd[2],                                //seconds
             date("m" ,$convertDateEnd),                               //month
@@ -96,9 +100,10 @@ else { $tzoffset_daylight = "-0500"; }
             date("Y", $convertDateEnd)                              //year
 
         );
-$printableline = '=0D=0A=';
+$printableline = '\\n';
         $eventStart = date("Ymd\THis", $convertedStart) . "Z";
         $eventEnd = date("Ymd\THis", $convertedEnd) . "Z";
+$timestamp = date("Ymd\THis", time()) . "Z";
         $summary = $post->eventTitle;
         $description = $post->eventDescription;
        # $description = str_replace(",", "\,", $description);
@@ -109,11 +114,14 @@ $printableline = '=0D=0A=';
 
         $uid = $post->id . "@" . get_bloginfo('home');
         $events .= "BEGIN:VEVENT\n";
-        $events .= "DTSTART;TZID=".$tzlocation.":" . $eventStart . "\n";
-        $events .= "DTEND;TZID=".$tzlocation.":" . $eventEnd . "\n";
+        $events .= "DTSTART:" . $eventStart . "\n";
+        $events .= "DTEND:" . $eventEnd . "\n";
+        $events .= "DTSTAMP:".$timestamp."\n";
+        $events .= "CREATED:".$timestamp."\n";
+        $events .= "LAST-MODIFIED:".$timestamp."\n";
         $events .= "UID:" . $uid . "\n";
         $events .= "SUMMARY:" . $summary . "\n";
-        $events .= "DESCRIPTION;ENCODING=QUOTED-PRINTABLE:" .  preg_replace("/[\n\t\r]/", $printableline, $description) . "\n";
+        $events .= "DESCRIPTION:" .  preg_replace("/[\n\t\r]/", $printableline, $description) . "\n";
         $events .= "END:VEVENT\n";
     }
 
@@ -127,31 +135,30 @@ $printableline = '=0D=0A=';
     }
 
     $content = "BEGIN:VCALENDAR\n";
-#    $content .= "VERSION:2.0\n";
     $content .= "PRODID:-//" . $blogName . "//NONSGML v1.0//EN\n";
+    $content .= "VERSION:2.0\n";
+    $content .= "CALSCALE:GREGORIAN\n";
+    $content .= "METHOD:PUBLISH\n";
     $content .= "X-WR-CALNAME:" . $blogName . "\n";
     $content .= "X-ORIGINAL-URL:" . $blogURL . "\n";
     $content .= "X-WR-CALDESC:Events for " . $blogName . "\n";
-    $content .= "CALSCALE:GREGORIAN\n";
-    $content .= "METHOD:PUBLISH\n";
-
-    $content .= "X-WR-TIMEZONE:\n";
+    $content .= "X-WR-TIMEZONE:".$tzlocation."\n";
     $content .= "BEGIN:VTIMEZONE\n";
-    $content .= "TZID:\n";
+    $content .= "TZID:".$tzlocation."\n";
     $content .= "X-LIC-LOCATION:".$tzlocation."\n";
     $content .= "BEGIN:STANDARD\n";
-    $content .= "DTSTART;VALUE=DATE-TIME:19691231T180000\n";
+    $content .= "DTSTART:19700308T020000\n";
     $content .= "TZOFFSETFROM:".$tzoffset_standard."\n";
-    $content .= "TZOFFSETTO:".$tzoffset_standard."\n";
-    $content .= "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=-1SU\n";
+    $content .= "TZOFFSETTO:".$tzoffset_daylight."\n";
+    $content .= "RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU\n";
     $content .= "TZNAME:".$tzname."\n";
     $content .= "END:STANDARD\n";
     $content .= "BEGIN:DAYLIGHT\n";
-    $content .= "DTSTART;VALUE=DATE-TIME:19691231T180000\n";
     $content .= "TZOFFSETFROM:".$tzoffset_daylight."\n";
-    $content .= "TZOFFSETTO:".$tzoffset_daylight."\n";
-    $content .= "RRULE:FREQ=YEARLY;BYMONTH=10;BYDAY=1SU\n";
+    $content .= "TZOFFSETTO:".$tzoffset_standard."\n";
     $content .= "TZNAME:".$tzname_daylight."\n";
+$content .="DTSTART:19701101T020000\n";
+$content .="RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU\n";
     $content .= "END:DAYLIGHT\n";
     $content .= "END:VTIMEZONE\n";
 
