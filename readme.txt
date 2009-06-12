@@ -6,8 +6,8 @@ Donate link: http://benjaminfleischer.com/code/donate
 Tags: ical, events manager, ical feed, feed, icalendar, calendar, events, event, subscribe
 Requires at least: 2.6
 Tested up to: 2.7.1
-Version: 1.0.4b
-Stable tag: 1.0.4b
+Version: 1.0.4c
+Stable tag: 1.0.4c
 
 Add an iCal feed to your site for the Events Manager plugin
 
@@ -18,6 +18,10 @@ Creates an iCal feed for [Events Manager](http://davidebenini.it/wordpress-plugi
 Based on [Gary King's iCal Posts](http://www.kinggary.com/archives/build-an-ical-feed-from-your-wordpress-posts-plugin) and modifications by [Jerome](http://capacity.electronest.com/ical-for-ec-event-calendar).
 
 Currently, the timezone information is hardcoded as Chicago in the ical-ec.php file.  The next version will allow editing this from the admin panel
+
+= 1.0.4c = 
+
+* I'm trying to fix the markdown syntax, I'm using [this](http://daringfireball.net/projects/markdown/dingus)
 
 = 1.0.4b =
 *  Somehow I didn't push the actual revision to 1.0.4 like I thought. 
@@ -34,30 +38,30 @@ forceoffset, uses the gmt_offset in Wordpress
 *  Changed description output to enconded quotable to preserve line breaks
 
 *  Added these configuration get parameters for time zones:
-    tzlocation, e.g. America/Chicago
-    tzoffset_standard, e.g. -0600
-    tzname, e.g. CST
-    tzname_daylight, e.g. CDT
-    tzoffset_daylight, e.g. -0500
+    * `tzlocation, e.g. America/Chicago`
+    * `tzoffset_standard, e.g. -0600`
+    * `tzname, e.g. CST`
+    * `tzname_daylight, e.g. CDT`
+    * `tzoffset_daylight, e.g. -0500`
 *  I haven't robustly tested this. I think you can find these values [here](http://www.w3.org/2002/12/cal/tzd/)
 
 
 *  Added ability to cron output to a file with these get parameters
-    ical   outputs to the screen
-    ical=cron  outputs to an ics file and displays success message
-    ical=rss outputs to an ics file and should be subscribable by an rss reader for cronless update
-    ical=ics get the ics file if available
+    * `ical   outputs to the screen`
+    * `ical=cron  outputs to an ics file and displays success message`
+    * `ical=rss outputs to an ics file and should be subscribable by an rss reader for cronless update`
+    * `ical=ics get the ics file if available`
 *  This seems to be working right now
 
 *  Example with output to screen:
-    Feed will be at http://your-web-address/?ical
+    * Feed will be at http://your-web-address/?ical
 *  Example with output to screen and custom timezones
-    Feed will be at http://your-web-address/?ical&tzlocation=America/Chicago etc.
+    * Feed will be at http://your-web-address/?ical&tzlocation=America/Chicago etc.
 *  Example with cron or rss file creation and custom timezones
-    Feed will be at http://your-web-address/?ical=rss&tzlocation=America/Chicago etc.
-    Feed will be at http://your-web-address/?ical=cron&tzlocation=America/Chicago etc.
+    * Feed will be at http://your-web-address/?ical=rss&tzlocation=America/Chicago etc.
+    * Feed will be at http://your-web-address/?ical=cron&tzlocation=America/Chicago etc.
 *  Example to get ics file
-    Feed will be at http://your-web-address/?ical=ics
+    * Feed will be at http://your-web-address/?ical=ics
 
 
 == Installation ==
